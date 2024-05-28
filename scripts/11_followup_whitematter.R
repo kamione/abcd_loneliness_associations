@@ -47,6 +47,7 @@ for (ith in 1:length(wmt_roinames)) {
         as_tibble() %>% 
         slice(2) %>% 
         mutate(
+            variable_name = wmt_roinames[ith],
             hemi = wmt_hemi[ith],
             region = wmt_label[ith],
             cohend = effectsize::logoddsratio_to_d(Coefficient, log = TRUE),
