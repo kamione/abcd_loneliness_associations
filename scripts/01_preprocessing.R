@@ -3,6 +3,8 @@ library(here)
 library(tidyverse)
 library(gtsummary)
 library(glue)
+library(flextable)
+library(officer)
 
 source(here("src", "R", "is_binary_column.R"))
 
@@ -300,7 +302,7 @@ master_preprocessed_df %>%
 
 
 # Table 1 ----------------------------------------------------------------------
-master_preprocessed_df %>% 
+table1 <- master_preprocessed_df %>% 
     select(loneliness_bl, loneliness_followup_bin, interview_age,
            demo_sex_v2, race_ethnicity_3) %>%
     mutate(
@@ -331,6 +333,26 @@ master_preprocessed_df %>%
     modify_header(label = "**Characteristics**") %>% 
     modify_spanning_header(
         all_stat_cols() ~ "**Loneliness at baseline**"
+    )
+
+# docx page setup
+sect_properties <- prop_section(
+    page_size = page_size(),
+    type = "continuous",
+    page_margins = page_mar(
+        bottom = 0.5, top = 0.5, right = 0.5, left = 0.5, gutter = 0
+    )
+)
+
+table1 %>% 
+    as_flex_table() %>% 
+    fontsize(size = 8.5, part = "all") %>% 
+    padding(padding.top = 1, padding.bottom = 1, part = "all") %>% 
+    bold(part = "header") %>% 
+    set_table_properties(width = 1, layout = "autofit") %>% 
+    save_as_docx(
+        path = here("outputs", "tables", "table1.docx"),
+        pr_section = sect_properties
     )
 
 # proportion
