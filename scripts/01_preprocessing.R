@@ -290,7 +290,7 @@ remove_id <- master_preprocessed_df %>%
 
 
 master_preprocessed_df <- master_preprocessed_df %>% 
-    filter(!(src_subject_id %in% remove_id)) %>% # 7,73
+    filter(!(src_subject_id %in% remove_id)) %>% # 7,968
     select(-all_of(remove_binary_variables)) 
 
 
@@ -354,6 +354,7 @@ table1 %>%
         path = here("outputs", "tables", "table1.docx"),
         pr_section = sect_properties
     )
+table1
 
 # proportion
 (master_preprocessed_df$loneliness_followup %>% table()) / dim(master_preprocessed_df)[1] * 100

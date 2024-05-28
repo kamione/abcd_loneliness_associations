@@ -14,7 +14,7 @@ master_preprocessed_df <- here(
         # https://wiki.abcdstudy.org/release-notes/imaging/quality-control.html
         mrif_score %in% c(1, 2) & imgincl_t1w_include == 1,
         imgincl_dmri_include == 1
-    ) # 8,074
+    ) # 6,612
 
 wmt_variables_df <- here("data", "raw", "included_variables.xlsx") %>% 
     readxl::read_excel(sheet = "White Matter Tracts") %>% 
