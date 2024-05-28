@@ -47,6 +47,7 @@ for (ith in 1:length(gmv_roinames)) {
         as_tibble() %>% 
         slice(2) %>% 
         mutate(
+            variable_name = roi,
             label = gmv_ggseg_roinames[ith],
             cohend = effectsize::t_to_d(t, df_error)$d,
             cohend_low = effectsize::t_to_d(t, df_error)$CI_low,
@@ -95,6 +96,20 @@ gmv_fig
 
 
 # Save -------------------------------------------------------------------------
+# result tables
+reduce(res_list, bind_rows) %>% 
+    mutate(p.adj = p.adjust(p, method = "fdr")) %>% 
+    select(variable_name, label, Coefficient, t, df_error, cohend, cohend_low, cohend_high, p, 
+           p.adj) %>% 
+    rename(
+        "beta" = "Coefficient",
+        "cohen's d" = "cohend", 
+        "95% CI low cohen's d" = "cohend_low",
+        "95% CI high cohen's d" = "cohend_high"
+    ) %>% 
+    write_csv(here("outputs", "tables", "lmm_results_baseline_gmv.csv"))
+
+# result figure
 ggpubr::ggexport(
     gmv_fig, 
     filename = here("outputs", "figs", "gmv.pdf"), 

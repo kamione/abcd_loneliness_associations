@@ -73,6 +73,21 @@ exposome_res <- reduce(res_list, bind_rows) %>%
     arrange(category) %>% 
     mutate(x = factor(1:n()))
 
+# save results to csv
+exposome_res %>% 
+    select(category, table_name, variable_name, variable_label, Coefficient,
+           z, cohend, cohend_low, cohend_high, p, p.adj) %>% 
+    rename(
+        "beta" = "Coefficient",
+        "cohen's d" = "cohend", 
+        "95% CI low cohen's d" = "cohend_low",
+        "95% CI high cohen's d" = "cohend_high"
+    ) %>% 
+    write_csv(here("outputs", "tables", "lmm_results_followup_environment.csv"))
+
+
+
+# Visualization ----------------------------------------------------------------
 exposome_res %>% 
     mutate(p_log = -log10(p)) %>% 
     ggplot(aes(x = x, y = p_log, color = category)) +

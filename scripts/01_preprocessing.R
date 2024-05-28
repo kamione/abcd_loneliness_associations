@@ -64,23 +64,19 @@ gmv_variables_df <- here("data", "raw", "included_variables.xlsx") %>%
     readxl::read_excel(sheet = "Gray Matter Volume")
 wmt_variables_df <- here("data", "raw", "included_variables.xlsx") %>% 
     readxl::read_excel(sheet = "White Matter Tracts")
-rsfmri_variables_df <- here("data", "raw", "included_variables.xlsx") %>% 
-    readxl::read_excel(sheet = "Resting-state FC")
 
 selected_filenames <- c(
     unique(pull(exposome_variables_df, table_name)), 
     unique(pull(health_variables_df, table_name)), 
     unique(pull(gmv_variables_df, table_name)),
-    unique(pull(wmt_variables_df, table_name)),
-    unique(pull(rsfmri_variables_df, table_name))
+    unique(pull(wmt_variables_df, table_name))
 ) %>% 
     discard(is.na) 
 selected_variables <- c(
     pull(exposome_variables_df, variable_name),
     pull(health_variables_df, variable_name),
     pull(gmv_variables_df, variable_name),
-    pull(wmt_variables_df, variable_name),
-    pull(rsfmri_variables_df, variable_name)
+    pull(wmt_variables_df, variable_name)
 )
 
 selected_files <- list()

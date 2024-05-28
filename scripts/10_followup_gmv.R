@@ -51,6 +51,7 @@ for (ith in 1:length(gmv_roinames)) {
         as_tibble() %>% 
         slice(2) %>% 
         mutate(
+            variable_name = roi,
             label = gmv_ggseg_roinames[ith],
             cohend = effectsize::logoddsratio_to_d(Coefficient, log = TRUE),
             cohend_low = effectsize::logoddsratio_to_d(CI_low, log = TRUE),
@@ -86,6 +87,19 @@ scgmv_res <- reduce(res_list, bind_rows) %>%
     filter(p < 0.05)
 
 # Save -------------------------------------------------------------------------
+reduce(res_list, bind_rows) %>% 
+    slice(1:68) %>% 
+    mutate(p.adj = p.adjust(p, method = "fdr")) %>% 
+    select(variable_name, label, Coefficient, z, cohend, cohend_low, 
+           cohend_high, p, p.adj) %>% 
+    rename(
+        "beta" = "Coefficient",
+        "cohen's d" = "cohend", 
+        "95% CI low cohen's d" = "cohend_low",
+        "95% CI high cohen's d" = "cohend_high"
+    ) %>% 
+    write_csv(here("outputs", "tables", "lmm_results_followup_gmv.csv"))
+
 ggpubr::ggexport(
     cgmv_fig, 
     filename = here("outputs", "figs", "cgmv_followup.pdf"), 

@@ -43,9 +43,12 @@ for (ith in 1:length(wmt_roinames)) {
         as_tibble() %>% 
         slice(2) %>% 
         mutate(
+            variable_name = wmt_roinames[ith],
             hemi = wmt_hemi[ith],
             region = wmt_label[ith],
             cohend = effectsize::t_to_d(t, df_error)$d,
+            cohend_low = effectsize::t_to_d(t, df_error)$CI_low,
+            cohend_high = effectsize::t_to_d(t, df_error)$CI_high,
             .before = Parameter
         )
     res_list[[ith]] <- res
@@ -59,3 +62,18 @@ fa_wmt_res <- reduce(res_list, bind_rows) %>%
     filter(p < 0.05) %>% 
     select(modality, hemi, region, cohend, p, p.adj)
 
+# save table
+reduce(res_list, bind_rows) %>% 
+    mutate(
+        p.adj = p.adjust(p, method = "fdr"),
+        modality = c(rep("fa", 20), rep("md", 20), rep("ad", 20), rep("rd", 20))
+    ) %>% 
+    select(variable_name, hemi, region, Coefficient, t, df_error, cohend, 
+           cohend_low, cohend_high, p, p.adj) %>% 
+    rename(
+        "beta" = "Coefficient",
+        "cohen's d" = "cohend", 
+        "95% CI low cohen's d" = "cohend_low",
+        "95% CI high cohen's d" = "cohend_high"
+    ) %>% 
+    write_csv(here("outputs", "tables", "lmm_results_baseline_wmt.csv"))

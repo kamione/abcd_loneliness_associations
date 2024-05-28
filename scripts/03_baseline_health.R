@@ -77,6 +77,20 @@ res_df <- reduce(res_list, bind_rows) %>%
     arrange(category) %>% 
     mutate(x = factor(1:n()))
 
+# save results to csv
+res_df %>% 
+    select(category, table_name, variable_name, variable_label, Coefficient,
+           t, df_error, cohend, cohend_low, cohend_high, p, p.adj) %>% 
+    rename(
+        "beta" = "Coefficient",
+        "cohen's d" = "cohend", 
+        "95% CI low cohen's d" = "cohend_low",
+        "95% CI high cohen's d" = "cohend_high"
+    ) %>% 
+    write_csv(here("outputs", "tables", "lmm_results_baseline_health.csv"))
+
+
+# Visualization ----------------------------------------------------------------
 health_fig <- res_df %>% 
     ggplot(aes(x = x, y = cohend, color = category)) +
         geom_point(size = 4, alpha = 0.75) +

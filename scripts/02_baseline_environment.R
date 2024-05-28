@@ -76,13 +76,25 @@ for (ith in 1:(length(exposome_variables))) {
     res_list[[ith]] <- res
 }
 
-
 exposome_res <- reduce(res_list, bind_rows) %>% 
     mutate(p.adj = p.adjust(p, method = "holm")) %>% 
     left_join(exposome_variables_df, by = "variable_name") %>% 
     arrange(category) %>% 
     mutate(x = factor(1:n()))
 
+# save results to csv
+exposome_res %>% 
+    select(category, table_name, variable_name, variable_label, Coefficient,
+           t, df_error, cohend, cohend_low, cohend_high, p, p.adj) %>% 
+    rename(
+        "beta" = "Coefficient",
+        "cohen's d" = "cohend", 
+        "95% CI low cohen's d" = "cohend_low",
+        "95% CI high cohen's d" = "cohend_high"
+    ) %>% 
+    write_csv(here("outputs", "tables", "lmm_results_baseline_environment.csv"))
+
+# Visualization ----------------------------------------------------------------
 exposome_fig <- exposome_res %>% 
     ggplot(aes(x = x, y = cohend, color = category)) +
         geom_point(size = 4, alpha = 0.75) +
@@ -265,12 +277,9 @@ exposome_fig <- exposome_res %>%
         )
 exposome_fig
 
-
-# Save -------------------------------------------------------------------------
 ggpubr::ggexport(
     exposome_fig, 
     filename = here("outputs", "figs", "exposome.pdf"), 
     width = 10, 
     height = 5
 )
-
