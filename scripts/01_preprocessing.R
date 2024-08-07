@@ -283,14 +283,15 @@ remove_id <- master_preprocessed_df %>%
     as_tibble() %>% 
     mutate(
         src_subject_id = master_preprocessed_df$src_subject_id,
-        prop_missing = value / dim(.)[1]
+        #prop_missing = value / dim(.)[1]
+        prop_missing = value / dim(master_preprocessed_df)[2]
     ) %>% 
     filter(prop_missing > 0.1) %>% 
-    pull(src_subject_id)
+    pull(src_subject_id) # remvoe 777
 
 
 master_preprocessed_df <- master_preprocessed_df %>% 
-    filter(!(src_subject_id %in% remove_id)) %>% # 7,968
+    filter(!(src_subject_id %in% remove_id)) %>% # 7,191
     select(-all_of(remove_binary_variables)) 
 
 

@@ -80,4 +80,6 @@ reduce(res_list, bind_rows) %>%
         "95% CI low cohen's d" = "cohend_low",
         "95% CI high cohen's d" = "cohend_high"
     ) %>% 
+    mutate_if(is.numeric, round, digits = 3) %>% 
     write_csv(here("outputs", "tables", "lmm_results_followup_wmt.csv"))
+

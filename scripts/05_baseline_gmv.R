@@ -14,7 +14,7 @@ master_preprocessed_df <- here(
     filter(
         # https://wiki.abcdstudy.org/release-notes/imaging/quality-control.html
         mrif_score %in% c(1, 2) & imgincl_t1w_include == 1
-    ) # 7,255
+    ) # 6,646
 
 gmv_variables_df <- here("data", "raw", "included_variables.xlsx") %>% 
     readxl::read_excel(sheet = "Gray Matter Volume") %>% 
@@ -107,6 +107,7 @@ reduce(res_list, bind_rows) %>%
         "95% CI low cohen's d" = "cohend_low",
         "95% CI high cohen's d" = "cohend_high"
     ) %>% 
+    mutate_if(is.numeric, round, digits = 3) %>% 
     write_csv(here("outputs", "tables", "lmm_results_baseline_gmv.csv"))
 
 # result figure

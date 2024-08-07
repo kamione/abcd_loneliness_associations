@@ -83,6 +83,7 @@ exposome_res %>%
         "95% CI low cohen's d" = "cohend_low",
         "95% CI high cohen's d" = "cohend_high"
     ) %>% 
+    mutate_if(is.numeric, round, digits = 3) %>% 
     write_csv(here("outputs", "tables", "lmm_results_followup_environment.csv"))
 
 
@@ -119,8 +120,8 @@ exposome_fig <- exposome_res %>%
         geom_point(size = 4, alpha = 0.75) +
         labs(x = "", y = "Effect Size (Cohen's d)") +
         scale_x_discrete(expand = c(0.05, 0)) +
-        scale_y_continuous(limits = c(-0.38, 0.38),
-                           breaks = c(-0.2, -0.1, 0, 0.1, 0.2)) +
+        scale_y_continuous(limits = c(-0.5, 0.5),
+                           breaks = c(-0.4, -0.2, -0.1, 0, 0.1, 0.2, 0.4)) +
         theme_clean() +
         theme(
             axis.text.x = element_blank(), 
@@ -148,9 +149,10 @@ exposome_fig <- exposome_res %>%
                 slice(1:3) %>% 
                 mutate(label = c(
                     "having a twin", 
-                    "planned pregnancy"
+                    "planned pregnancy",
+                    "tobacco per days"
                 )),
-            nudge_x = c(-10, -20),
+            nudge_x = c(-10, -20, -30),
             nudge_y = 0,
             hjust = 1,
             segment.size = 0.25,
@@ -196,11 +198,10 @@ exposome_fig <- exposome_res %>%
                 slice(1:3) %>% 
                 mutate(label = c(
                     "school environment", 
-                    "school involvement",
-                    "school disengagement"
+                    "school involvement"
             )),
             nudge_x = -10,
-            nudge_y = c(-0.17, -0.1, -0.25),
+            nudge_y = c(-0.17, -0.1),
             hjust = 1,
             segment.size = 0.25,
             show.legend = FALSE
@@ -229,8 +230,7 @@ exposome_fig <- exposome_res %>%
                 arrange(desc(abs(cohend))) %>%
                 slice(1:2) %>% 
                 mutate(label = c(
-                    "safe from crime", 
-                    "violence not a problem"
+                    "safe from crime"
                 )),
             nudge_x = -70,
             nudge_y = c(-0.1, -0.2),

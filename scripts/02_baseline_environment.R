@@ -92,6 +92,7 @@ exposome_res %>%
         "95% CI low cohen's d" = "cohend_low",
         "95% CI high cohen's d" = "cohend_high"
     ) %>% 
+    mutate_if(is.numeric, round, digits = 3) %>% 
     write_csv(here("outputs", "tables", "lmm_results_baseline_environment.csv"))
 
 # Visualization ----------------------------------------------------------------
@@ -118,7 +119,7 @@ exposome_fig <- exposome_res %>%
         gghighlight(
             p.adj < 0.05,
             unhighlighted_params = list(size = 2, color = "grey70"), 
-            use_direct_label=FALSE,
+            use_direct_label = FALSE,
             keep_scales = TRUE
         ) +
         geom_text_repel(
@@ -128,12 +129,12 @@ exposome_fig <- exposome_res %>%
                 arrange(desc(abs(cohend))) %>% 
                 slice(1:3) %>% 
                 mutate(label = c(
-                    "bedwetting", 
                     "planned pregnancy", 
+                    "bedwetting", 
                     "tobacco per days"
                 )),
-            nudge_x = c(-10, -20, -25),
-            nudge_y = c(0.2, -0.1, 0.15),
+            nudge_x = c(-20, -10, -25),
+            nudge_y = c( -0.1, 0.2, 0.15),
             hjust = 1,
             segment.size = 0.25,
             show.legend = FALSE
@@ -165,7 +166,7 @@ exposome_fig <- exposome_res %>%
                 subset(p.adj < 0.05 & category == "Life Adversity") %>% 
                 arrange(desc(abs(cohend))) %>%
                 mutate(label = "total traumatic events"),
-            nudge_y = 0.07,
+            nudge_y = 0.1,
             hjust = 0.5,
             segment.size = 0.25,
             show.legend = FALSE
@@ -176,8 +177,8 @@ exposome_fig <- exposome_res %>%
                 subset(p.adj < 0.05 & category == "Laws and Bias") %>% 
                 arrange(desc(abs(cohend))) %>%
                 mutate(label = "CBD/THC law became effective"),
-            nudge_y = -0.06,
-            nudge_x = 30,
+            nudge_y = -0.08,
+            nudge_x = 20,
             hjust = 0.5,
             segment.size = 0.25,
             show.legend = FALSE
@@ -204,8 +205,8 @@ exposome_fig <- exposome_res %>%
                     "school involvement",
                     "educational attainment"
             )),
-            nudge_x = c(-20, -20, -10),
-            nudge_y = c(-0.06, -0.11, -0.2),
+            nudge_x = c(-20, -20, -15),
+            nudge_y = c(-0.06, -0.11, -0.18),
             hjust = 1,
             segment.size = 0.25,
             show.legend = FALSE
@@ -233,9 +234,9 @@ exposome_fig <- exposome_res %>%
                 subset(p.adj < 0.05 & category == "Community Health Care") %>% 
                 arrange(desc(abs(cohend))) %>%
                 slice(1:3) %>% 
-                mutate(label = c("mental health", "smoking", "colorectal screening")),
+                mutate(label = c("mental health", "colorectal screening", "smoking")),
             nudge_x = -20,
-            nudge_y = c(0.08, 0, -0.1),
+            nudge_y = c(0.08, -0.1, 0),
             hjust = 1,
             segment.size = 0.25,
             show.legend = FALSE
@@ -250,7 +251,7 @@ exposome_fig <- exposome_res %>%
                     "neighborhood affluence",
                     "income greater than 75K proportion", 
                     "income greater than 100K proportion", 
-                    "college proportion"
+                    "high-skill employment"
             )),
             nudge_x = 20,
             nudge_y = c(-0.2, -0.28, -0.32, -0.24),

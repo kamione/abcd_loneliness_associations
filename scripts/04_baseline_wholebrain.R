@@ -11,30 +11,17 @@ library(ggpubr)
 # Data I/O ---------------------------------------------------------------------
 master_preprocessed_df <- here("data", "processed", "master_preprocessed_df.rds") %>% 
     read_rds()
-overall_fc <- master_preprocessed_df %>% 
-    select(matches("rsfmri_c")) %>% 
-    mutate(fc_pos = rowMeans(replace(.[-1], .[-1] < 0, 0)),
-           fc_neg = rowMeans(replace(.[-1], .[-1] > 0, 0)),
-           .keep = "used")
-master_preprocessed_df <- bind_cols(master_preprocessed_df, overall_fc)
-
 
 gmv_master_preprocessed_df <- master_preprocessed_df %>% 
     filter(
         # https://wiki.abcdstudy.org/release-notes/imaging/quality-control.html
         mrif_score %in% c(1, 2) & imgincl_t1w_include == 1
-    )
+    ) # remove 872
 wmt_master_preprocessed_df <- master_preprocessed_df %>% 
     filter(
         # https://wiki.abcdstudy.org/release-notes/imaging/quality-control.html
         mrif_score %in% c(1, 2) & imgincl_t1w_include == 1,
         imgincl_dmri_include == 1
-    )
-fc_master_preprocessed_df <- master_preprocessed_df %>% 
-    filter(
-        # https://wiki.abcdstudy.org/release-notes/imaging/quality-control.html
-        mrif_score %in% c(1, 2) & imgincl_t1w_include == 1,
-        rsfmri_ntpoints > 375 & imgincl_rsfmri_include == 1
     )
 
 

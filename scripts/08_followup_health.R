@@ -73,6 +73,7 @@ res_df %>%
         "95% CI low cohen's d" = "cohend_low",
         "95% CI high cohen's d" = "cohend_high"
     ) %>% 
+    mutate_if(is.numeric, round, digits = 3) %>% 
     write_csv(here("outputs", "tables", "lmm_results_followup_health.csv"))
 
 
@@ -114,7 +115,7 @@ health_fig <- res_df %>%
                     "aggressive", "thought", "total", "attention"
                 )),
             nudge_x = c(2, -1, -1, 3, 1, -2, 1, 0),
-            nudge_y = c(-0.025, 0.1, -0.075, 0.05, 0.05, 0.02, -0.05, -0.05),
+            nudge_y = c(-0.025, 0.05, -0.075, 0.05, 0.05, 0.02, -0.05, -0.05),
             hjust = 0.5,
             segment.size = 0.25,
             show.legend = FALSE
@@ -142,7 +143,7 @@ health_fig <- res_df %>%
 health_fig
 
 ggpubr::ggexport(
-    health_fig, 
+    health_fig,
     filename = here("outputs", "figs", "health_followup.pdf"), 
     width = 10, 
     height = 4
